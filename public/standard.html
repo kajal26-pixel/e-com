@@ -1,0 +1,56 @@
+<html>
+    <body>
+        <h1>HEY THERE, PLEASE PAY THE AMOUNT HERE</h1>
+        <form method="POST" action="/payment" enctype="multipart/form-data">
+        <input id="orderid" type="text" name="orderid"  placeholder="orderid">
+        </form>
+        <button id="rzp-button1">Pay with Razorpay</button>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+            document.getElementById('rzp-button1').onclick = async function(e){
+                e.preventDefault()
+                console.log('hi')
+                let response=await fetch('/payment',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({
+                        //orderid:'64476921fccfa36147057512',
+                        orderid:document.getElementById('orderid').value
+                    })
+                })
+                let orderdata=await response.json()
+                console.log(orderdata.amount)
+                var options = {
+                    "key": 'rzp_test_lM1tzCWZzQ3TnR', // Enter the Key ID generated from the Dashboard
+                    "amount": orderdata.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                    "currency": "INR",
+                    "order_id": orderdata.id,
+                    "handler": function (response){
+                        alert(response.razorpay_payment_id);
+                        alert(response.razorpay_order_id);
+                        alert(response.razorpay_signature);
+                    }
+                }
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            }
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            
+   
